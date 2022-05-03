@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+{% block title %}Booking{% endblock %}
+{% block body %}
+    <h1 class="text-center" style="margin-top: 7.5rem; color: #CC0000; font-family: 'Lobster Two', cursive;">Book room</h1>
+    {% if result.__eq__("True") %}
+        <h1 class="text-center" style="font-family: 'Lobster Two', cursive;">Book room successfully</h1>
+        <div class="container position-relative bg-light">
+            <div class="col-md-7 mx-auto my-2" style="font-family: 'Lobster Two', cursive;">
+                <h1 class="text-center" style="margin-top: 1.5rem; color: #CC0000; font-family: 'Lobster Two', cursive;">Book room ticket</h1>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td colspan="2">Customer name: {{ cn }}</td>
+                            <td colspan="2">Room booked: {{ ri }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Date rent: {{ dr }}</td>
+                            <td colspan="2">Date end: {{ de }}</td>
+                        </tr>
+                      <tr>
+                        <th>Customer name</th>
+                        <th>Customer id</th>
+                        <th>Number of people</th>
+                        <th>Foreign</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{ cn }}</td>
+                        <td>{{ ci }}</td>
+                        <td>{{ n }}</td>
+                        <td>{{ f }}</td>
+                      </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-danger back">Back to home page</button>
+            </div>
+        </div>
+    {% else %}
+        <h1 class="text-center">Something went wrong !!! <a class="text-danger" href="/">Try again</a></h1>
+    {% endif %}
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script>
+        $(".back").click(function (e) {
+            e.preventDefault();
+            window.location.replace("{{ url_for('home') }}")
+        });
+    </script>
+{% endblock %}

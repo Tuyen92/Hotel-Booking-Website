@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light text-capitalize main-font-family">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}"><img src="../static/imgs/logo.png" alt="#" /></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#show-menu" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="show-menu">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}#room">rooms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% if current_user.is_authenticated %} {{ url_for('logout') }} {% else %} {{ url_for('login') }} {% endif %}">
+                        {% if current_user.is_authenticated %} Logout {% else %} Login {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('sign_up') }}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}#contact">contacts</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% if current_user.user_role_id == 2 or current_user.user_role_id == 1 %} {{ url_for('payment') }} {% endif %}">
+                        {% if current_user.user_role_id == 2 or current_user.user_role_id == 1 %}Payment{% endif %}
+                    </a>
+                </li>
+                <li class="nav-item book {% if current_user.is_authenticated %} booking {% endif %} d-flex align-items-center">
+                    {% if current_user.is_authenticated %}
+                        <a class="nav-link" href="{{ url_for('home') }}#home">book now</a>
+                    {% else %}
+                        <a href="#home" data-toggle="tooltip" title="Please LOGIN before booking!">book now</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script src="../static/js/jquery-3.3.1.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+
+<script>
+    let beforeScroll = $(window).scrollTop();
+
+    $(window).scroll(function () {
+        if ($(this).scrollTop() - beforeScroll < 0) {
+            $(".navbar").slideDown(300);
+        } else {
+            $(".navbar").slideUp(300);
+        }
+        beforeScroll = $(this).scrollTop();
+    });
+</script>

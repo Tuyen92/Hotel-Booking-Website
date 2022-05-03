@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+{% block title %}Payment{% endblock %}
+{% block body %}
+    <h1 class="text-center" style="margin-top: 7.5rem; color: #CC0000; font-family: 'Lobster Two', cursive;">PAYMENT</h1>
+    <div class="container position-relative bg-light">
+        <form style="font-family: 'Lobster Two', cursive;" method="post">
+            <h2 class="text-center" style="margin-top: 1.5rem; color: #CC0000; font-family: 'Lobster Two', cursive;">Find rental room</h2>
+            <div class="form-group col-md-12" >
+                <lable for="customer-id" >Customer ID:</lable>
+                <input type="text" size="50" name="idcustomer" id="idcustomer" required>
+                <label>Date:</label>
+                <input type="date" size="50" name="date" id="date" value="DD-MM-YYYY">
+                <button type="Submit" class="btn btn-danger pay">Pay</button>
+            </div>
+        </form>
+        <hr>
+        <h2 class="text-center" style="margin-top: 1.5rem; color: #CC0000; font-family: 'Lobster Two', cursive;">Bill information</h2>
+        <table class="table table-bordered" id="bill" name="bill">
+            <tr>
+                {% for f in find_rent %}
+                    {% if f[1]%}
+                        <td>Customer name: {{ f[1] }}</td>
+                    {% else %}
+                        <td>Customer name:</td>
+                    {% endif %}
+                {% endfor %}
+                <td>Room:
+                    {% for r in rooms %}
+                        {{ r[0] }}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% for f in find_rent %}
+                <tr>
+                    {% if f[2] and f[3] %}
+                        <td>Date rent: {{ f[2] }}</td>
+                        <td>Date end: {{ f[3] }}</td>
+                    {% else %}
+                        <td>Date rent:</td>
+                        <td>Date end:</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2">TOTAL: {{ "{:,.1f}".format(pay) }} VNĐ</td>
+            </tr>
+        </table>
+        <form style="font-family: 'Lobster Two', cursive;">
+            <button type="button" class="btn btn-danger cancel">Cancel</button>
+        </form>
+    </div>
+    <script>
+        $(.pay).click(function (e) {
+            e.preventDefault();
+
+            let id = parseInt($("#idcustomer").val())
+
+            fetch('/payment', {
+                method: 'post',
+                body: JSON.stringify({
+                    "id": id
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function(res) {
+                console.info(res)
+            }).then(function(data) {
+                console.info(data)
+            })
+
+        });
+    </script>
+    <script>
+        $(".cancel").click(function () {
+            window.location.replace("{{ url_for('home') }}")
+        });
+    </script>
+{% endblock %}

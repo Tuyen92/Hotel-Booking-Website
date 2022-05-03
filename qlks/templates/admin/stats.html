@@ -1,0 +1,150 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h1 class="text-center text-danger">Revenue statistics</h1>
+<div class="row">
+    <div class="col-md-5 col-xa-12">
+        <table class="table">
+            <tr>
+                <th>Number</th>
+                <th>Room type</th>
+                <th>Revenue</th>
+            </tr>
+            {% for s in stats %}
+            <tr>
+                <td>{{ s[1] }}</td>
+                <td>{{ s[2] }}</td>
+                <td>
+                    {% if s[3] %}
+                    {{ "{:,.1f}".format(s[3]) }} VNĐ
+                    {% else %}
+                    0 VNĐ
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <table class="table">
+            <tr>
+                <th>Room id</th>
+                <th>Num. rentals</th>
+            </tr>
+            {% for r in rental_room %}
+            <tr>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-5 col-xa-12">
+        <form>
+            <div class="form-group">
+                <input type="text" class="form-control" name="kw" placeholder="Type here..">
+            </div>
+            <div class="form-group">
+                <input type="date" class="form-control" name="from_date">
+            </div>
+            <div class="form-group">
+                <input type="date" class="form-control" name="to_date">
+            </div>
+            <input type="submit" class="btn btn-info" value="Search">
+        </form>
+
+        <canvas id="productChartID"></canvas>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5 col-xa-12">
+        <table class="table">
+            <tr>
+                <th>MONTH</th>
+                <th>Revenue</th>
+            </tr>
+            {% for m in month_stats %}
+            <tr>
+                <td>{{ m[0] }}</td>
+                <td>{{ "{:,.1f}".format(m[1]) }} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-5 col-xa-12">
+        <form>
+            <div class="form-group">
+                <input type="number" min="2000" name="year" class="form-control" placeholder="Find year..." />
+            </div>
+            <input type="submit" value="Search" class="btn btn-danger" />
+        </form>
+        <canvas id="productMonthID"></canvas>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let labels = [], labels2 = []
+    let data = [], data2 = []
+    let colors = [], colors2 = []
+    let borderColors = [], borderColors2 = []
+    let r, g, b;
+
+    {% for s in stats %}
+        {% if s[3] %}
+            labels.push('{{ s[2] }}')
+            data.push({{ s[3] }})
+
+            r = Math.random()*255
+            g = Math.random()*255
+            b = Math.random()*255
+
+            colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+            borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+        {% endif %}
+    {% endfor %}
+
+    {% for s in month_stats %}
+        {% if s[1] %}
+            labels2.push({{ s[0] }})
+            data2.push({{ s[1] }})
+
+            r = Math.random()*255
+            g = Math.random()*255
+            b = Math.random()*255
+
+            colors2.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+            borderColors2.push(`rgba(${r}, ${g}, ${b}, 1)`)
+        {% endif %}
+    {% endfor %}
+
+    window.onload = function() {
+        const ctx = document.getElementById('productChartID').getContext('2d');
+        loadChart(ctx, 'bar', labels, data, colors, borderColors)
+
+        const ctx2 = document.getElementById('productMonthID').getContext('2d');
+        loadChart(ctx2, 'line', labels2, data2, colors2, borderColors2)
+    }
+
+    function loadChart(ctx, typeChart, labels, data, colors, borderColors) {
+        const myChart = new Chart(ctx, {
+            type: typeChart,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Revenue statistics',
+                    data: data,
+                    backgroundColor: colors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+    {% if current_user.is_authenticated and current_user.user_role_id != 3 %}
+        <h1 style="font-size: 3rem; color:#CC0000" class="text-center">Welcome <span style="font-size: 3rem; color:#000">{{ current_user.name }}</span>  to <span style="font-size: 3rem; color:#000">Five Hotel</span> </h1>
+    {% else %}
+        <h1 style="font-size: 3rem;" class="text-center text-danger">You have no permission to be here !!! <br> Please logout</h1>
+    {% endif %}
+    {% include 'base/footer.html' %}
+{% endblock %}
